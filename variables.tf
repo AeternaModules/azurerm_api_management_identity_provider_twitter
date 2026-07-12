@@ -3,16 +3,24 @@ variable "api_management_identity_provider_twitters" {
 Map of api_management_identity_provider_twitters, attributes below
 Required:
     - api_key
+    - api_key_key_vault_id (alternative to api_key - read from Key Vault instead)
+    - api_key_key_vault_secret_name (alternative to api_key - read from Key Vault instead)
     - api_management_name
     - api_secret_key
+    - api_secret_key_key_vault_id (alternative to api_secret_key - read from Key Vault instead)
+    - api_secret_key_key_vault_secret_name (alternative to api_secret_key - read from Key Vault instead)
     - resource_group_name
 EOT
 
   type = map(object({
-    api_key             = string
-    api_management_name = string
-    api_secret_key      = string
-    resource_group_name = string
+    api_key                              = string
+    api_key_key_vault_id                 = optional(string)
+    api_key_key_vault_secret_name        = optional(string)
+    api_management_name                  = string
+    api_secret_key                       = string
+    api_secret_key_key_vault_id          = optional(string)
+    api_secret_key_key_vault_secret_name = optional(string)
+    resource_group_name                  = string
   }))
   validation {
     condition = alltrue([

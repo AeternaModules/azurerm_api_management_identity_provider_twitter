@@ -3,12 +3,12 @@ variable "api_management_identity_provider_twitters" {
 Map of api_management_identity_provider_twitters, attributes below
 Required:
     - api_key
-    - api_key_key_vault_id (alternative to api_key - read from Key Vault instead)
-    - api_key_key_vault_secret_name (alternative to api_key - read from Key Vault instead)
+    - api_key_key_vault_id (optional, alternative to api_key)
+    - api_key_key_vault_secret_name (optional, alternative to api_key)
     - api_management_name
     - api_secret_key
-    - api_secret_key_key_vault_id (alternative to api_secret_key - read from Key Vault instead)
-    - api_secret_key_key_vault_secret_name (alternative to api_secret_key - read from Key Vault instead)
+    - api_secret_key_key_vault_id (optional, alternative to api_secret_key)
+    - api_secret_key_key_vault_secret_name (optional, alternative to api_secret_key)
     - resource_group_name
 EOT
 
@@ -22,22 +22,6 @@ EOT
     api_secret_key_key_vault_secret_name = optional(string)
     resource_group_name                  = string
   }))
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_identity_provider_twitters : (
-        length(v.api_key) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
-  validation {
-    condition = alltrue([
-      for k, v in var.api_management_identity_provider_twitters : (
-        length(v.api_secret_key) > 0
-      )
-    ])
-    error_message = "must not be empty"
-  }
   # --- Unconfirmed validation candidates, derived from azurerm_api_management_identity_provider_twitter's provider source ---
   # Not auto-enabled: either a bespoke provider validator we can't safely translate,
   # or a path that crosses a list-typed block (needs its own for_each wrapping).
@@ -58,5 +42,11 @@ EOT
   #   source:    [from resourcegroups.ValidateName] !matched
   # path: api_management_name
   #   source:    [from validate.ApiManagementServiceName] !matched
+  # path: api_key
+  #   condition: length(value) > 0
+  #   message:   must not be empty
+  # path: api_secret_key
+  #   condition: length(value) > 0
+  #   message:   must not be empty
 }
 
